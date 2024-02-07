@@ -31,12 +31,19 @@ export const signUp = async (req, res) => {
             password: passwordHash,
         }
 
-        const activation_token = createActivationToken(newUser)
+        const userData = new User({
+            name: newUser.name,
+            email: newUser.email,
+            password: newUser.password
+        })
 
-        const url = `${CLIENT_URL}/user/activate/${activation_token}`
-        sendMail(email, url, "Verify your email address")
+        await userData.save()
+        // const activation_token = createActivationToken(newUser)
 
-        res.json({ message: "Register Success! Please activate your email to start." })
+        // const url = `${CLIENT_URL}/user/activate/${activation_token}`
+        // sendMail(email, url, "Verify your email address")
+
+        res.json({ message: "Register Success!" })
     } catch (error) {
         return res.status(500).json({ message: error.message })
     }
